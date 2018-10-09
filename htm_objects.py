@@ -1,53 +1,35 @@
 class HtmInfo:
     htm_object_list = []
+    htm_italics_list = []
+    htm_params_list = []
 
-    def __init__(self, htm_name, htm_path, htm_h1):
+    def __init__(self, htm_name, htm_path, htm_h1, italics_list, 
+                  prospective_sys_param_list):
         self.htm_name = htm_name
         self.htm_path = htm_path
         self.htm_h1 = htm_h1
-        # HtmInfo.htm_object_list.append(self)
+        self.italics_list = italics_list
+        self.prospective_sys_param_list = prospective_sys_param_list
+
 
     def __str__(self):
         return "\n\n\nFile: " + self.htm_name + "\n" + "Path: " + self.htm_path + "\n" + \
-               "Heading 1: " + self.htm_h1 + "\n\n"
+               "Heading 1: " + self.htm_h1 + "\n\n" + "Italics: " + self.italics_list[0] + \
+                "Params?: " + self.prospective_sys_param_list[0]
     
-    @classmethod
     def add(self):
         HtmInfo.htm_object_list.append(self)
-
-class HtmItalics(HtmInfo):
-    htm_italics_list = []
-
-    def __init__(self, htm_name, htm_path, htm_h1, italics_list):
-        self.italics_list = italics_list
-        HtmInfo.__init__(self,  htm_name, htm_path, htm_h1)
-        HtmItalics.htm_italics_list.append(self)
-
-    def __str__(self):
-        return "\n\n\nFile: " + self.htm_name + "\n" + "Path: " + self.htm_path + "\n" + \
-               "Heading 1: " + self.htm_h1 + "\n" + \
-               "Italics: " + self.italics_list[0]
-
-    def print_italics(self):
-        for entry in self.italics_list:
-            print entry
-
-class HtmProspectSysParms(HtmInfo):
-    htm_params_list = []
-
-    def __init__(self, htm_name, htm_path, htm_h1, prospective_sys_param_list):
-        self.prospective_sys_param_list = prospective_sys_param_list
-        HtmInfo.__init__(self, htm_name, htm_path, htm_h1)
-        HtmProspectSysParms.htm_params_list.append(self)
-
-    def __str__(self):
-        return "\n\n\nFile: " + self.htm_name + "\n" + "Path: " + self.htm_path + "\n" + \
-               "Heading 1: " + self.htm_h1 + "\n" + \
-               "Params?: " + self.prospective_sys_param_list[0]
+        
+    def add_italics(self):
+        HtmInfo.htm_italics_list.append(self)
+        
+    def add_params(self):
+        HtmInfo.htm_params_list.append(self)
+        
                
 if __name__ == '__main__':
     for x in range(10):
-        htm_file_object = HtmInfo("", str(x), "")
+        htm_file_object = HtmInfo("", str(x), "", ["S"], ["T"])
         print htm_file_object
     print "#############################################\n\n"
     print HtmInfo.htm_object_list
