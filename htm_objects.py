@@ -11,7 +11,7 @@ class HtmInfo:
         return "\n\n\nFile: " + self.htm_name + "\n" + "Path: " + self.htm_path + "\n" + \
                "Heading 1: " + self.htm_h1 + "\n\n"
     
-    # @classmethod
+    @classmethod
     def add(self):
         HtmInfo.htm_object_list.append(self)
 

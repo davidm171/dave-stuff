@@ -56,7 +56,7 @@ for h in h1s:
     filename = path_transfer.split("\\")[-1:]
     htm_file_object = HtmInfo(filename[0], path_transfer, h[1])
     # print "Object: ", htm_file_object
-    htm_file_object.add()
+    HtmInfo.add()
     italics_list = h[2]
     if italics_list:
         htm_italics_object = HtmItalics(filename[0], path_transfer, h[1], italics_list)
