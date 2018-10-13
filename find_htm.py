@@ -6,6 +6,12 @@ import sys
 import re
 from htm_object import HtmInfo
 
+
+def writefile(file, fileText):
+    f = open(file, "w")
+    f.write(fileText)
+    f.close()
+
 def open_file(file):
     with open(file, 'r') as f:
         return f.read()
@@ -51,32 +57,46 @@ for h in h1s:
     htm_file_object = HtmInfo(filename, path_transfer, h[1], h[2], h[3])
     htm_file_object.add()
     italics_list = h[2]
-    
-    htm_file_object.add_italics() if italics_list
+    if italics_list:
+        htm_file_object.add_italics()
         
     prospective_sys_param_list = h[3]
     if prospective_sys_param_list:
         htm_file_object.add_params()
 
+# ----------------------------------------------------------------------------------------------------
 
-
-
-    
 print "Total number of files           : ", len(HtmInfo.htm_object_list)
 print "Files with italics              : ", len(HtmInfo.htm_italics_list)
 print "Files with system params (maybe): ", len(HtmInfo.htm_params_list)
 
 itals = [x.htm_path for x in HtmInfo.htm_italics_list]
 params = [p.htm_path for p in HtmInfo.htm_params_list]
-
 itals_params = list(set(itals) & set(params))
-
 countb = len(itals_params)
- 
 print "files with both                 : ", countb
-
 union = list(set(itals) | set(params))
-
 countu = len(union)
-
 print "union of both                   : ", countu
+
+# Start pricessing -----------------------------------------------------------------------------------
+from add_cross_refs import crossRefs
+lang = "us"
+
+from excel_import import import_map
+
+guideToDirMap = {}
+guideToDirMap = import_map(lang)
+
+
+for obj in HtmInfo.htm_italics_list:
+    fileText = open_file(obj.htm_path)
+    print "The italics file path is: ", obj.htm_path
+    # crossRefs(lang, build_path, htm_object_list, htm_italics_list)
+    fileText = crossRefs(lang, top, obj, fileText, guideToDirMap)
+    print "\n\n Start ###############################################################################################"
+    print fileText
+    print "\n\n Finish ###############################################################################################"
+    writefile(obj.htm_path, fileText)
+    print "File processed."
+

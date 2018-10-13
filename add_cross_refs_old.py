@@ -9,8 +9,12 @@
 # It substitutes the same text back in, for example a reference to Work Package Manager instead of Order Manager
 
 
+# def crossRefs(lang, build_path, htm_object_list, htm_italics_list):
 def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
+    # from excel_import import import_map
 
+    # guideToDirMap = {}
+    # guideToDirMap = import_map(lang)
 
     # guideToDirMap = {"PowerOn Configuration Reference Guide" : "Subsystems\\core_config\\content\\00-poweron_configuration_reference", "Generic Functionality Guide" : \
     # "Subsystems\\core\\content\\00-generic_functionality", "Alarm Configuration Guide" : "Subsystems\\core_config\\content\\02-alarm_configuration", "Generic Functionality User Guide" : \
@@ -126,14 +130,10 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
         # x = raw_input("STOP!!!")
         for htm_object in htm_object_list:
             if (str(guideDirectory).lower() in str(htm_object.htm_path).lower()) and (section == htm_object.htm_h1):
-                # print "+++The section is: ", section
-                # print "+++The fileAddress is: ",  fileAddress
-                # print "+++The headingText is: ", headingText
                 htmRef = re.findall(r'Subsystems\\(.+?\.htm)', htm_object.htm_path)
                 relativeRef = str(htmRef[0])
-                # href = "..\..\..\\" + relativeRef
                 href = relPath(htm_object.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
-                # print "+++The href with ellipsis is: ", href
+                print "+++The href with ellipsis is: ", href
                 linkInfo[0] = href
                 linkInfo.append(section)
 
@@ -150,6 +150,7 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
     # htmAlarms = findHtm(alarmPath)												# Can use this to only add links to a subset of the folders - but should do all
 
     # fileHeadingDict = htmHeading(htmList)
+
 
     htm_object_list = obj.htm_object_list
     
@@ -169,5 +170,7 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
                 print "THE REPLACEMENT IS: ", aTag
                 hit = "<i>" + hit + "</i>"  # Substitute italics out, there must be an easier way?
                 fileText = fileText.replace(hit, aTag)
-                
-    return fileText
+                return fileText
+            else:
+                return "DUD"
+            
