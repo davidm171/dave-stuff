@@ -20,22 +20,7 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
     # "Work Package Manager User Guide" : "Subsystems\\nms\content\\01-order_manager", "Order Manager User Guide" : "Subsystems\\nms\content\\01-order_managerr"}
 
     import os, re, sys, textwrap
-
-    # Open file ----------------------------------------------------------------------------------------------------------------------
-    def openFile(file):
-        f = open(file, 'r')
-        fileText = f.read()
-        f.close()
-        return (fileText)
-
-    # --------------------------------------------------------------------------------------------------------------------------------
-
-    # Write and close file -----------------------------------------------------------------------------------------------------------
-    def writefile(file, fileText):
-        f = open(file, "w")
-        f.write(fileText)
-        f.close()
-
+    
     # --------------------------------------------------------------------------------------------------------------------------------
 
     # Function to find the depth of ellipisis in relative path -------------------------------------------------------------------------
@@ -50,8 +35,10 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
 
         depth = absoluteFileDepth - depthCount - 1
         relPath = ""
-        for i in range(0, depth):
-            relPath = relPath + "..\\"
+        # for i in range(0, depth):
+            # relPath = relPath + "..\\"
+            
+        relPath = [relPath + "..\\" for i in range(0, depth)]
 
         ellipsis = os.path.normpath(relPath)
         return ellipsis
