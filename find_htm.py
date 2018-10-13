@@ -88,15 +88,10 @@ from excel_import import import_map
 guideToDirMap = {}
 guideToDirMap = import_map(lang)
 
-
 for obj in HtmInfo.htm_italics_list:
     fileText = open_file(obj.htm_path)
     print "The italics file path is: ", obj.htm_path
-    # crossRefs(lang, build_path, htm_object_list, htm_italics_list)
     fileText = crossRefs(lang, top, obj, fileText, guideToDirMap)
-    print "\n\n Start ###############################################################################################"
-    print fileText
-    print "\n\n Finish ###############################################################################################"
     writefile(obj.htm_path, fileText)
     print "File processed."
 

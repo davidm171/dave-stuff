@@ -42,23 +42,18 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
     def relPath(file):
         path = os.path.normpath(file)
         path_list = path.split(os.sep)
-        # print path_list
         absoluteFileDepth = len(path_list)
         depthCount = absoluteFileDepth
 
         while path_list[depthCount - 1] != "Subsystems":
             depthCount -= 1
-        # print "depthCount is: ", depthCount
 
         depth = absoluteFileDepth - depthCount - 1
-        # print "Depth is: ", absoluteFileDepth - depthCount - 1
         relPath = ""
         for i in range(0, depth):
             relPath = relPath + "..\\"
-        # print "relPath: ", relPath
 
         ellipsis = os.path.normpath(relPath)
-        # print "The ELLIPSIS is: ", relPath
         return ellipsis
 
     # ---------------------------------------------------------------------------------------------------------------------------------
@@ -80,17 +75,14 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
         guideName = ref[0]
         linkInfo = ["Link not found!", "No section text in link!"]
         if guideName in guideToDirMap:
-            print "***The guide name is: ", guideName
+
             guideDirectory = guideToDirMap[guideName]
-            print "###The guide directory is: ", guideDirectory
-            # linkInfo = []
             if len(ref) == 1:
                 section = "Introduction"
                 linkInfo = firstPageCrossRef(guideDirectory, section, linkInfo)
 
             elif len(ref) == 2:
                 section = ref[1]
-                print "SECTION is: ", section
                 linkInfo = constructCrossRef(guideDirectory, section,  linkInfo)
 
         return linkInfo
@@ -99,20 +91,14 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
     # Search for cross ref guide directory address in all address, and section, and construct cross ref -------------------------------
     # This searches for introduction in the filename rather than in the heading so no need to translate -------------------------------
     def firstPageCrossRef(guideDirectory, section, linkInfo):
-        # print "IT GETS INTO SUB, linkInfo at start is: ", linkInfo
-        # print fileHeadingDict
-        # x = raw_input("STOP!!!")
+
         for htm_object in htm_object_list:
             if (str(guideDirectory).lower() in str(htm_object.htm_path).lower()) and (
                     str(section).lower() in str(htm_object.htm_path).lower()):
-                # print "+++The section is: ", section
-                # print "+++The fileAddress is: ",  fileAddress
-                # print "+++The headingText is: ", headingText
+
                 htmRef = re.findall(r'Subsystems\\(.+?\.htm)', htm_object.htm_path)
                 relativeRef = str(htmRef[0])
-                # href = "..\..\..\\" + relativeRef
                 href = relPath(htm_object.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
-                # print "+++The href with ellipsis is: ", href
                 linkInfo[0] = href
                 linkInfo.append(section)
 
@@ -121,19 +107,15 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
     # ---------------------------------------------------------------------------------------------------------------------------------
     # Search for cross ref guide directory address in all address, and section, and construct cross ref -------------------------------
     def constructCrossRef(guideDirectory, section, linkInfo):
-        print "IT GETS INTO SUB, linkInfo at start is: ", linkInfo
-        # print fileHeadingDict
-        # x = raw_input("STOP!!!")
+
         for htm_object in htm_object_list:
             if (str(guideDirectory).lower() in str(htm_object.htm_path).lower()) and (section == htm_object.htm_h1):
-                # print "+++The section is: ", section
-                # print "+++The fileAddress is: ",  fileAddress
-                # print "+++The headingText is: ", headingText
+ 
                 htmRef = re.findall(r'Subsystems\\(.+?\.htm)', htm_object.htm_path)
                 relativeRef = str(htmRef[0])
-                # href = "..\..\..\\" + relativeRef
+
                 href = relPath(htm_object.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
-                # print "+++The href with ellipsis is: ", href
+
                 linkInfo[0] = href
                 linkInfo.append(section)
 
@@ -143,30 +125,20 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
     # Main ----------------------------------------------------------------------------------------------------------------------------
 
     # path = "C:\\builds\\us"														# CHANGE THIS TO POINT TO ANY DIRECTORY AS LONG AS TRANSLATION IN SPREADSHEET
-    # alarmPath = "C:\\builds\\ustest\\Subsystems\\core\\content\\02-alarm"			# Dir to do subset of results C:\builds\us\Subsystems\core\content\02-alarm
-    # alarmPath = r"C:\builds\us"
-
-    # htmList = findHtm(build_path)  # build_path comes from main function parameter
-    # htmAlarms = findHtm(alarmPath)												# Can use this to only add links to a subset of the folders - but should do all
-
-    # fileHeadingDict = htmHeading(htmList)
-
+    
     htm_object_list = obj.htm_object_list
     
     findItalics = obj.italics_list
     if "system_parameters" not in str(obj.htm_path):  # Don't process the system parameters directory
 
         for hit in findItalics:
-            print "The italics are: ", hit
             ref = processItalics(findItalics)
-            print "The reference is ", ref
             refInfo = guideToDir(ref)
-            print "+++refInfo is: ", refInfo
+
             if refInfo[0] != "Link not found!":
                 hit = hit[3:-4]  # Remove italics here from text
                 aTag = "<a href=" + "\"" + refInfo[0] + "\"" + " class=\"MCXref xref\"" + ">" + hit + "</a>"
                 aTag = aTag.replace("\\", "/")
-                print "THE REPLACEMENT IS: ", aTag
                 hit = "<i>" + hit + "</i>"  # Substitute italics out, there must be an easier way?
                 fileText = fileText.replace(hit, aTag)
                 
