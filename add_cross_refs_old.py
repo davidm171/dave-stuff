@@ -171,6 +171,4 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
                 hit = "<i>" + hit + "</i>"  # Substitute italics out, there must be an easier way?
                 fileText = fileText.replace(hit, aTag)
                 return fileText
-            else:
-                return "DUD"
             

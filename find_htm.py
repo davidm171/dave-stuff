@@ -5,6 +5,7 @@ import fnmatch
 import sys
 import re
 from htm_object import HtmInfo
+from time_it import timer
 
 
 def writefile(file, fileText):
@@ -40,58 +41,72 @@ def h1_print(file_texts):
         
         yield path_transfer, Heading, find_italics, find_prospective_sys_params
             
-top = r"C:\test_project"
-filepat = "*.htm"
+@timer
+def main():
+    top = r"C:\test_project"
+    filepat = "*.htm"
 
-# Defines the generator ------------------------------------------------------------------------------
+    # Defines the generator ------------------------------------------------------------------------------
 
-gen_find = (os.path.join(path,name) for path, dirlist, filelist in os.walk(top)
-                                    for name in fnmatch.filter(filelist,filepat))
-file_text_strings = open_file_y(gen_find)
-h1s = h1_print(file_text_strings)
+    gen_find = (os.path.join(path,name) for path, dirlist, filelist in os.walk(top)
+                                        for name in fnmatch.filter(filelist,filepat))
+    file_text_strings = open_file_y(gen_find)
+    h1s = h1_print(file_text_strings)
 
-# Runs the generator ---------------------------------------------------------------------------------
+    # Runs the generator ---------------------------------------------------------------------------------
 
-for h in h1s:
-    filename = path_transfer.split("\\")[-1]
-    htm_file_object = HtmInfo(filename, path_transfer, h[1], h[2], h[3])
-    htm_file_object.add()
-    italics_list = h[2]
-    if italics_list:
-        htm_file_object.add_italics()
-        
-    prospective_sys_param_list = h[3]
-    if prospective_sys_param_list:
-        htm_file_object.add_params()
+    for h in h1s:
+        filename = os.path.split(path_transfer)[1]
+        if "poa_main.htm" == filename:
+            flare_main_path = os.path.split(path_transfer)[0]
+            print "Hurray, found poa_main.htm ", path_transfer
+            HtmInfo.poa_filename = path_transfer
+            HtmInfo.poa_main_content_dir = os.path.join(flare_main_path, "content")
+            HtmInfo.subsystemsDir = os.path.join(flare_main_path, "Subsystems")
+        htm_file_object = HtmInfo(filename, path_transfer, h[1], h[2], h[3])
+        htm_file_object.add()
+        italics_list = h[2]
+        if italics_list:
+            htm_file_object.add_italics()
+            
+        prospective_sys_param_list = h[3]
+        if prospective_sys_param_list:
+            htm_file_object.add_params()
 
-# ----------------------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------------------
 
-print "Total number of files           : ", len(HtmInfo.htm_object_list)
-print "Files with italics              : ", len(HtmInfo.htm_italics_list)
-print "Files with system params (maybe): ", len(HtmInfo.htm_params_list)
+    print "Total number of files           : ", len(HtmInfo.htm_object_list)
+    print "Files with italics              : ", len(HtmInfo.htm_italics_list)
+    print "Files with system params (maybe): ", len(HtmInfo.htm_params_list)
 
-itals = [x.htm_path for x in HtmInfo.htm_italics_list]
-params = [p.htm_path for p in HtmInfo.htm_params_list]
-itals_params = list(set(itals) & set(params))
-countb = len(itals_params)
-print "files with both                 : ", countb
-union = list(set(itals) | set(params))
-countu = len(union)
-print "union of both                   : ", countu
+    itals = [x.htm_path for x in HtmInfo.htm_italics_list]
+    params = [p.htm_path for p in HtmInfo.htm_params_list]
+    itals_params = list(set(itals) & set(params))
+    countb = len(itals_params)
+    print "files with both                 : ", countb
+    union = list(set(itals) | set(params))
+    countu = len(union)
+    print "union of both                   : ", countu
 
-# Start pricessing -----------------------------------------------------------------------------------
-from add_cross_refs import crossRefs
-lang = "us"
+    # Start pricessing -----------------------------------------------------------------------------------
+    from add_cross_refs import crossRefs
+    lang = "us"
 
-from excel_import import import_map
+    from excel_import import import_map
 
-guideToDirMap = {}
-guideToDirMap = import_map(lang)
+    guideToDirMap = {}
+    guideToDirMap = import_map(lang)
 
-for obj in HtmInfo.htm_italics_list:
-    fileText = open_file(obj.htm_path)
-    print "The italics file path is: ", obj.htm_path
-    fileText = crossRefs(lang, top, obj, fileText, guideToDirMap)
-    writefile(obj.htm_path, fileText)
-    print "File processed."
+    for obj in HtmInfo.htm_italics_list:
+        fileText = open_file(obj.htm_path)
+        print "The italics file path is: ", obj.htm_path
+        fileText = crossRefs(lang, top, obj, fileText, guideToDirMap)
+        # writefile(obj.htm_path, fileText)
+        print "File processed."
 
+    print "POA file path is:       ", HtmInfo.poa_filename
+    print "Content directory is:   ", HtmInfo.poa_main_content_dir
+    print "Subsystem directory is  ", HtmInfo.subsystemsDir
+    
+if __name__ == "__main__":
+    main()

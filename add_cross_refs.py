@@ -35,10 +35,10 @@ def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
 
         depth = absoluteFileDepth - depthCount - 1
         relPath = ""
-        # for i in range(0, depth):
-            # relPath = relPath + "..\\"
+        for i in range(0, depth):
+            relPath = relPath + "..\\"
             
-        relPath = [relPath + "..\\" for i in range(0, depth)]
+        # relPath = [relPath + "..\\" for i in range(0, depth)][-1]
 
         ellipsis = os.path.normpath(relPath)
         return ellipsis
