@@ -9,7 +9,7 @@ def timer(func):
         value = func(*args, **kwargs)
         end_time = time.time()     # 2
         run_time = end_time - start_time    # 3
-        print("Finished in ", run_time, " secs")
+        print "Finished in ", run_time, " secs"
         return value
     return wrapper_timer
     

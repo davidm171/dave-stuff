@@ -1,7 +1,7 @@
 # coding="utf-8"
 # Create directory of all system parameter htms by parsing relevant pages
 
-def create_parameter_files(lang, build_path, allHtmPaths):
+def create_parameter_files(lang, build_path):
     # open the file-----------------------------------------------------------------------------------------------------------------------------------------------------------
     def open_file(file_name):
         f1 = open(file_name, "r")
@@ -62,14 +62,15 @@ def create_parameter_files(lang, build_path, allHtmPaths):
             for h6 in root.iterfind('body/h6'):
                 if h6.text is not None:
                     name = h6.text
-                    # print "Name is--", name, "---"
-                    # print "Parameter is--", processHeading(name).encode('utf-8'), "---"
-                    # print "The filepath is: ", file
+                    print "Name is--", name, "---"
+                    print "Parameter is--", processHeading(name).encode('utf-8'), "---"
+                    print "The filepath is: ", file
                 else:
-                    # print "There is a bookmark here"
+                    print "There is a bookmark here"
+                    print "The tag is ", 
                     bookmark = h6.find('a')                                            #Finds the child a (bookmark) of an h6
-                    # print "The bookmark is: ", bookmark.attrib
-                    # print "The parameter is: ", h6[0].tail                        #Finds the h6 if there is a bookmark
+                    print "The bookmark is: ", bookmark.attrib
+                    print "The parameter is: ", h6[0].tail                        #Finds the h6 if there is a bookmark
                     name = h6[0].tail
                 
                 parameterText = processHeading(name)
@@ -78,7 +79,7 @@ def create_parameter_files(lang, build_path, allHtmPaths):
                 
             lastParameter = processHeading(name)
             lastParameterInFile.append(lastParameter)                                    # Keep a record of the last parameter in each file    
-        # print "The last parameters are: ", lastParameterInFile, "\n\n" 
+        print "The last parameters are: ", lastParameterInFile, "\n\n" 
                         
         return sysParamList, sysParamDict, lastParameterInFile 
 
@@ -88,15 +89,15 @@ def create_parameter_files(lang, build_path, allHtmPaths):
             index = sysParamList.index(param)
             if param not in lastParameterInFile:
                 nextIndex = index +1
-                # print "Hurray! ", param, " is in main list at position ", index, "Next entry is: ", sysParamList[nextIndex] ###  This doesn't check for the end of the file
+                print "Hurray! ", param, " is in main list at position ", index, "Next entry is: ", sysParamList[nextIndex] ###  This doesn't check for the end of the file
                 nextParam = sysParamList[nextIndex]
                 endString = "<h6>" + nextParam
             else:
-                # print "The parameter is the last in the topic"
+                print "The parameter is the last in the topic"
                 endString = "<p class=\"hide\">"
                 
             if sysParamDict.has_key(param):
-                # print "\n\nThe parameter ", param, " is in ", sysParamDict[param]
+                print "\n\nThe parameter ", param, " is in ", sysParamDict[param]
                 filePath = sysParamDict[param]
                 fileText = open_file(filePath).decode('utf-8')        ### change this to remove any a tags
                 fileText = re.sub(r"<a name=(.*?)<\/a>", "",fileText)  ### this line removes all the a tags in the string
@@ -105,11 +106,11 @@ def create_parameter_files(lang, build_path, allHtmPaths):
                 startIndex = fileText.find(startString)
                 tempText = fileText[startIndex:]
                 endIndex = tempText.find(endString)
-                # print "\n @@@The tempText is: ", tempText.encode('utf-8')
+                print "\n @@@The tempText is: ", tempText.encode('utf-8')
                 parameterText = tempText[:endIndex]
                 parameterText = re.sub(r"<a.*?>", "<i>",parameterText)                 # Two lines remove cross references in sys param text
                 parameterText = re.sub(r"</a>", "</i>",parameterText)
-                # print "\n @@@The parameterText is: ", parameterText.encode('utf-8')
+                print "\n @@@The parameterText is: ", parameterText.encode('utf-8')
                 createParameterFile(parameterText, param, writeDestination)
     # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     #
@@ -186,18 +187,17 @@ def create_parameter_files(lang, build_path, allHtmPaths):
                 "background_foreground_colours.htm", "normally_open_points.htm", "looped_nops.htm", "circuit_breakers.htm", "spurs.htm", "cable_ratings.htm", "location_category.htm",
                 "scada_analogues.htm"] # earth_fault_indicators.htm and dressing_symbols.htm missing - it's a duplicate, text.htm is not unique
                 
+                
+    # systemParameterFileList = ["a_system_parameter_list.htm"]
     # op_dir = os.path.join(build_path,lang)
     
     # Find the poa main and subsystems directory
     
-    # for root, dirnames, filenames in os.walk(build_path):
-        # if "poa_main.htm" in filenames:
-            # print "Hurray, found poa_main.htm ", root
-            # poa_main_content_dir = os.path.join(root, "content")
-            # subsystemsDir = os.path.join(root, "Subsystems")
-    from htm_object import HtmInfo
-    poa_main_content_dir = HtmInfo.poa_main_content_dir
-    subsystemsDir = HtmInfo.subsystemsDir
+    for root, dirnames, filenames in os.walk(build_path):
+        if "poa_main.htm" in filenames:
+            print "Hurray, found poa_main.htm ", root
+            poa_main_content_dir = os.path.join(root, "content")
+            subsystemsDir = os.path.join(root, "Subsystems")
         
     writeDestination = os.path.join(poa_main_content_dir, "system_parameters")      # Should make the second directory here a variable so it can be changed
     print "The writedestination is", writeDestination
@@ -207,25 +207,15 @@ def create_parameter_files(lang, build_path, allHtmPaths):
     except WindowsError:
         print "Folder ", writeDestination, " is open!!"
         pass
-    
-    # allHtmPaths = [os.path.join(path,name) for path, dirlist, filelist in os.walk(subsystemsDir)
-                # for name in fnmatch.filter(filelist,filepat)]
+
+    allHtmPaths = findHtm(subsystemsDir)
     systemParameterFilePaths = filePaths(allHtmPaths, systemParameterFileList)
     sysParamList, sysParamDict, lastParameterInFile = getSystemParameters(systemParameterFilePaths)
-    createHtmlFiles(sysParamList, sysParamDict, lastParameterInFile)
+    # createHtmlFiles(sysParamList, sysParamDict, lastParameterInFile)
 
-# External ------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    from htm_object import HtmInfo
-    import fnmatch
-    import os
     lang = 'us'
-    filepat = "*.htm"
     build_path = r"C:\test_project"
-
-    allHtmPaths = [os.path.join(path,name) for path, dirlist, filelist in os.walk(subsystemsDir)
-                for name in fnmatch.filter(filelist,filepat)]
-    create_parameter_files(lang, build_path, allHtmPaths)
-
+    create_parameter_files(lang, build_path)
 
 

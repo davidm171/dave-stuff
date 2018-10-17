@@ -6,6 +6,7 @@ import sys
 import re
 from htm_object import HtmInfo
 from time_it import timer
+from createSysParamFiles import create_parameter_files
 
 
 def writefile(file, fileText):
@@ -79,6 +80,7 @@ def main():
     print "Files with italics              : ", len(HtmInfo.htm_italics_list)
     print "Files with system params (maybe): ", len(HtmInfo.htm_params_list)
 
+    htms = [h.htm_path for h in HtmInfo.htm_object_list]
     itals = [x.htm_path for x in HtmInfo.htm_italics_list]
     params = [p.htm_path for p in HtmInfo.htm_params_list]
     itals_params = list(set(itals) & set(params))
@@ -87,10 +89,19 @@ def main():
     union = list(set(itals) | set(params))
     countu = len(union)
     print "union of both                   : ", countu
+    
+    
+    # Add system parameters sub folder-------------------------------------------------------------------
+    lang = "us"
+    build_path = top
+    
+    allHtmPaths = [file for file in htms if "Subsystems" in str(file)]
+    from createSysParamFiles import create_parameter_files
+    
+    create_parameter_files(lang, build_path, allHtmPaths)
 
     # Start pricessing -----------------------------------------------------------------------------------
     from add_cross_refs import crossRefs
-    lang = "us"
 
     from excel_import import import_map
 
@@ -103,6 +114,8 @@ def main():
         fileText = crossRefs(lang, top, obj, fileText, guideToDirMap)
         # writefile(obj.htm_path, fileText)
         print "File processed."
+
+    
 
     print "POA file path is:       ", HtmInfo.poa_filename
     print "Content directory is:   ", HtmInfo.poa_main_content_dir
