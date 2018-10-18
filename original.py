@@ -59,29 +59,57 @@ def create_parameter_files(lang, build_path):
             fileText = open_file(file)
             root = ET.fromstring(fileText)
             # print "The root tag is: ", root
-            for h6 in root.iterfind('body/h6'):
-                if h6.text is not None:
-                    name = h6.text
-                    print "Name is--", name, "---"
-                    print "Parameter is--", processHeading(name).encode('utf-8'), "---"
-                    print "The filepath is: ", file
-                else:
-                    print "There is a bookmark here"
-                    print "The tag is ", 
-                    bookmark = h6.find('a')                                            #Finds the child a (bookmark) of an h6
-                    print "The bookmark is: ", bookmark.attrib
-                    print "The parameter is: ", h6[0].tail                        #Finds the h6 if there is a bookmark
-                    name = h6[0].tail
+            
+            # for h6 in root.findall("body/h6"):
+                # h6.text.encode('utf8')
+                # yield h6.text
+            
+            # gen = (h6.text for h6 in root.findall("body/h6") if h6,text is not None)
+            
+            # for s in gen:
+                # print s.encode('utf8'), type(s)
+
+            # for h6 in root.findall("body/h6"):
+                # print file
+                # print type(h6)
+                # try:
+                    # if h6.text is not None:
+                        # print h6.text.encode('utf8')
+                    # else:
+                        # print "None Found"
+                # except (TypeError, ValueError) as error:
+                    # print "TypeError", error
+            # print(ET.tostring(root, encoding='utf8').decode('utf8'))
+            # h6_list = [elem for elem in root.iter() if elem.tag == "h6"]
+            # print h6_list
+            
+            rawHeading = re.findall(r"<h6.+?</h6>", fileText)
+            print rawHeading
+            
+            
+            # for h6 in root.iterfind('body/h6'):
+                # if h6.text is not None:
+                    # name = h6.text
+                    # print "Name is--", name, "---"
+                    # print "Parameter is--", processHeading(name).encode('utf-8'), "---"
+                    # print "The filepath is: ", file
+                # else:
+                    # print "There is a bookmark here"
+                    # print "The tag is ", 
+                    # bookmark = h6.find('a')                                            #Finds the child a (bookmark) of an h6
+                    # print "The bookmark is: ", bookmark.attrib
+                    # print "The parameter is: ", h6[0].tail                        #Finds the h6 if there is a bookmark
+                    # name = h6[0].tail
                 
-                parameterText = processHeading(name)
-                sysParamList.append(parameterText)
-                sysParamDict[parameterText] = file
+                # parameterText = processHeading(name)
+                # sysParamList.append(parameterText)
+                # sysParamDict[parameterText] = file
                 
-            lastParameter = processHeading(name)
-            lastParameterInFile.append(lastParameter)                                    # Keep a record of the last parameter in each file    
-        print "The last parameters are: ", lastParameterInFile, "\n\n" 
+            # lastParameter = processHeading(name)
+            # lastParameterInFile.append(lastParameter)                                    # Keep a record of the last parameter in each file    
+        # print "The last parameters are: ", lastParameterInFile, "\n\n" 
                         
-        return sysParamList, sysParamDict, lastParameterInFile 
+        # return sysParamList, sysParamDict, lastParameterInFile 
 
     # Create an htm file for all the parameters in the list ----------------------------------------------------------------------------------------------------------
     def createHtmlFiles(sysParamList, sysParamDict, lastParameterInFile):
@@ -177,18 +205,18 @@ def create_parameter_files(lang, build_path):
     sys.setdefaultencoding('utf8')
 
     # Add the file name here of files that contain system parameter descriptions in h6 format ----------------------------------------------------------------------------------
-    systemParameterFileList = ["a_system_parameter_list.htm", "b_system_parameter_list.htm", "c_system_parameters_list.htm", "d_system_parameters_list.htm","e_system_parameters_list.htm",
-                "f_system_parameters_list.htm", "g_system_parameters_list.htm", "h_system_parameters_list.htm", "i_system_parameters_list.htm", "j_system_parameters_list.htm", 
-                "l_system_parameters_list.htm", "m_system_parameters_list.htm", "n_system_parameters_list.htm", "o_system_parameters_list.htm", "p_system_parameters_list.htm",
-                "r_system_parameters_list.htm", "s_system_parameters_list.htm", "t_system_parameters_list.htm", "u_system_parameters_list.htm", "w_system_parameters_list.htm", 
-                "y_system_parameters_list.htm", "z_system_parameters_list.htm" , "oms_system_parameters.htm", "mobile_system_parameters.htm", "power_analysis_system_parameters_list.htm",
-                "nmi_system_parameters.htm", "ivvc_system_parameters.htm", "iccp_system_parameters.htm", "geoview_system_parameters.htm", "network_model_exporter_system_parameters.htm", 
-                "nmi_system_parameters.htm", "sld_system_parameters_hidden.htm", "printing.htm", "application_window_size.htm", "spacing_and_feature_distance.htm", "location_points.htm", 
-                "background_foreground_colours.htm", "normally_open_points.htm", "looped_nops.htm", "circuit_breakers.htm", "spurs.htm", "cable_ratings.htm", "location_category.htm",
-                "scada_analogues.htm"] # earth_fault_indicators.htm and dressing_symbols.htm missing - it's a duplicate, text.htm is not unique
+    # systemParameterFileList = ["a_system_parameter_list.htm", "b_system_parameter_list.htm", "c_system_parameters_list.htm", "d_system_parameters_list.htm","e_system_parameters_list.htm",
+                # "f_system_parameters_list.htm", "g_system_parameters_list.htm", "h_system_parameters_list.htm", "i_system_parameters_list.htm", "j_system_parameters_list.htm", 
+                # "l_system_parameters_list.htm", "m_system_parameters_list.htm", "n_system_parameters_list.htm", "o_system_parameters_list.htm", "p_system_parameters_list.htm",
+                # "r_system_parameters_list.htm", "s_system_parameters_list.htm", "t_system_parameters_list.htm", "u_system_parameters_list.htm", "w_system_parameters_list.htm", 
+                # "y_system_parameters_list.htm", "z_system_parameters_list.htm" , "oms_system_parameters.htm", "mobile_system_parameters.htm", "power_analysis_system_parameters_list.htm",
+                # "nmi_system_parameters.htm", "ivvc_system_parameters.htm", "iccp_system_parameters.htm", "geoview_system_parameters.htm", "network_model_exporter_system_parameters.htm", 
+                # "nmi_system_parameters.htm", "sld_system_parameters_hidden.htm", "printing.htm", "application_window_size.htm", "spacing_and_feature_distance.htm", "location_points.htm", 
+                # "background_foreground_colours.htm", "normally_open_points.htm", "looped_nops.htm", "circuit_breakers.htm", "spurs.htm", "cable_ratings.htm", "location_category.htm",
+                # "scada_analogues.htm"] # earth_fault_indicators.htm and dressing_symbols.htm missing - it's a duplicate, text.htm is not unique
                 
                 
-    # systemParameterFileList = ["a_system_parameter_list.htm"]
+    systemParameterFileList = ["iccp_system_parameters.htm"]
     # op_dir = os.path.join(build_path,lang)
     
     # Find the poa main and subsystems directory
