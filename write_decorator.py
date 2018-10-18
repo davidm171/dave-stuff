@@ -51,8 +51,8 @@ def writefile(func):
         </body>
     </html>"""
 
-            text = args[1]
-            write_text = start + text + end
+            text_to_display = args[1]
+            write_text = start + text_to_display
             f.write(text_to_display.encode("utf8"))
             f.close()
         except IOError:
@@ -63,9 +63,10 @@ def writefile(func):
 @writefile
 def message(file, text_to_display):
     return text_to_display
-file = "diddy.htm"
-
-text_to_display = raw_input("Enter text for htm: ")
-# text_to_display = "Hello there!"
-message(file, text_to_display)
+    
+if __name__ == "__main__":
+    file = "diddy.htm"
+    text_to_display = raw_input("Enter text for htm: ")
+    # text_to_display = "Hello there!"
+    message(file, text_to_display)
     

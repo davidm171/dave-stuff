@@ -62,10 +62,6 @@ def getSystemParameters(systemParameterFilePaths):
         rawHeading = re.findall(r"<h6.+?</h6>", fileText)
         print rawHeading
         
-
-
-
-
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Main --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -113,7 +109,11 @@ except WindowsError:
 allHtmPaths = findHtm(subsystemsDir)
 systemParameterFilePaths = filePaths(allHtmPaths, systemParameterFileList)
 
+writeDestination = os.path.join(poa_main_content_dir, "system_parameters")
+if not os.path.exists(writeDestination):        # Should delete this first?
+    os.makedirs(writeDestination)
 
+from write_decorator import message
 
 for file in systemParameterFilePaths:
     fileText = open_file(file).decode('utf8')
@@ -135,6 +135,11 @@ for file in systemParameterFilePaths:
         endIndex = fileText.find(end_string)
         param_text = fileText[startIndex - 4:endIndex - 4]
         print "\n", param_text.encode('utf8'), "\n\n"
+
+        param_file_name = processHeading(start_string)[4:] + ".htm"
+        param_file_path = os.path.join(writeDestination, param_file_name)
+        print "@@@File path: ",  param_file_path
+        message(param_file_path, param_text)
         start_string = end_string
 
 
