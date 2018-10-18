@@ -53,7 +53,7 @@ def writefile(func):
 
             text_to_display = args[1]
             write_text = start + text_to_display
-            f.write(text_to_display.encode("utf8"))
+            f.write(text_to_display.decode("utf8"))
             f.close()
         except IOError:
             print "Can't write file: ", file

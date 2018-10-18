@@ -9,16 +9,6 @@ def open_file(file_name, encoding='utf8'):
     f1.close()
     return fileText
     
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Write and close file ----------------------------------------------------------------------------------------------------------------------------------------------------
-def writefile(file,fileText):
-    print "++The file being written is:" , file
-    try: 
-        f = open(file, "w")
-        f.write(fileText)
-        f.close()
-    except IOError:
-        print "Can't write file: ", file
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Function to extract system parameter name from h6----------------------------------------------------------------------------------------------------------------------
 def processHeading(name):
@@ -49,22 +39,9 @@ def filePaths(path,systemParameterFileList):
             systemParameterFilePaths.append(htmPath)
 
     return systemParameterFilePaths
-# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
-# Function to find system parameters in file list -------------------------------------------------------------------------------------------------------------------------
-def getSystemParameters(systemParameterFilePaths):
-    sysParamList = []
-    sysParamDict = {}
-    lastParameterInFile = []
-    for file in systemParameterFilePaths:
-        fileText = open_file(file)
-
-        
-        rawHeading = re.findall(r"<h6.+?</h6>", fileText)
-        print rawHeading
-        
-# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
 # Main --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 lang = 'us'
 build_path = r"C:\test_project"
 import codecs, os, string, re, shutil, sys
@@ -148,5 +125,7 @@ for file in systemParameterFilePaths:
         # print d
 
     # print "The last parameter in the file was: ", end_string  #Need to sort out last parameters in file problem
+    # and coding
+    # and rewriting directory for testing
 
 
