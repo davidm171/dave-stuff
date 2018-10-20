@@ -12,15 +12,17 @@ def open_file(file_name, encoding='utf8'):
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Function to extract system parameter name from h6----------------------------------------------------------------------------------------------------------------------
 def processHeading(name):
-    # name = re.sub(r"\n", "", name)              ### This removes carriage returns which appear in h6s for no known reason
-    
+    name = re.sub(r"\n", "", name)              ### This removes carriage returns which appear in h6s for no known reason
+    name = re.sub(r"<a name=(.*?)<\/a>", "",name)
     nameP = name.replace(" ", "")                                # Removes spaces so no issue with spaces before colon
     colonPosition = string.find(nameP, ":")
     if colonPosition != -1:
         parameterText = nameP[:colonPosition]
     else:
         parameterText = nameP
-    
+
+    parameterText = parameterText.strip('<h6>')
+    parameterText = parameterText.strip('</h6>')
     parameterText = parameterText.strip()
     return parameterText
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -106,14 +108,15 @@ for file in systemParameterFilePaths:
     start_string = str(i)
     for h6 in h6_list:
         end_string = str(h6)
-        print processHeading(start_string)
+        print "The proessed heading string is: ", processHeading(start_string)
         print start_string.encode('utf8'), " -----> ", end_string.encode('utf8')
         startIndex = fileText.find(start_string)
         endIndex = fileText.find(end_string)
         param_text = fileText[startIndex - 4:endIndex - 4]
         print "\n", param_text.encode('utf8'), "\n\n"
-
-        param_file_name = processHeading(start_string)[4:] + ".htm"
+        print "The start string is: ", start_string
+        param_file_name = processHeading(start_string) + ".htm"
+        print "The filenmae is: ", param_file_name
         param_file_path = os.path.join(writeDestination, param_file_name)
         print "@@@File path: ",  param_file_path
         message(param_file_path, param_text)

@@ -1,23 +1,12 @@
-# open the file-----------------------------------------------------------------------------------------------------------------------------------------------------------
-# def open_file(file_name, decode='utf8'):
-    # f1 = open(file_name, "r")
-    # fileText = f1.read()
-    # f1.close()
-    # return fileText
-    
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# coding="utf-8"
 # Write and close file ----------------------------------------------------------------------------------------------------------------------------------------------------
 def writefile(func):
     import io
     def wrapper(*args,**kargs):
         file = args[0]
-        try: 
-            # with io.open(file,'r',encoding='utf8') as f:
-                # text = f.read()
-            # f = io.open("test", mode="wt")
-            # f.read()
-            # f = io.open(file, "r", decoding = 'utf8')
-            start = """<!DOCTYPE html>
+        text_to_display = args[1]
+
+        start = """<!DOCTYPE html>
     <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-gb" xml:lang="en-gb" data-mc-search-type="Stem" data-mc-help-system-file-name="SystemParameterPopupHelp.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-toc-path="">
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,19 +40,15 @@ def writefile(func):
             </script>
         </head>
         <body>"""
-            end = """" <p class="hide"><a href="../resources/stylesheets/fonts/geinspirasans.woff" class="MCXref xref">(linked document is not in XML format)</a>
+        end = """" <p class="hide"><a href="../resources/stylesheets/fonts/geinspirasans.woff" class="MCXref xref">(linked document is not in XML format)</a>
             </p>
         </body>
     </html>"""
 
-            text_to_display = args[1]
-            write_text = (start + text_to_display).decode('utf-8')
-            with io.open(file,'w',encoding='utf8') as f:
-                f.write(write_text)
-            # f.write(text_to_display).encode("utf8")
-            # f.close()
-        except IOError:
-            print "Can't write file: ", file
+        write_text = (start + text_to_display).decode('utf-8')
+        with io.open(file,'w',encoding='utf8') as f:
+            f.write(write_text)
+
     return wrapper
 # -------------------------------------------------------------------------------------------------------------------------------
 
