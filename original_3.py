@@ -99,20 +99,21 @@ for file in systemParameterFilePaths:
     
     # rawHeading = re.finsystemParameterFilePaths:
     h6all= re.findall(r"<h6.+?</h6>", fileText)
-    # print h6all
-    
-    # gen = (h6.text for h6 in root.findall("body/h6") if h6.text is not None)
-    
+    h6all.append("<p class=\"hide\">")                                    # Add for end of file    
     h6_list = iter(h6all)
+
     i = next(h6_list)
     start_string = str(i)
     for h6 in h6_list:
+    
         end_string = str(h6)
         print "The proessed heading string is: ", processHeading(start_string)
         print start_string.encode('utf8'), " -----> ", end_string.encode('utf8')
         startIndex = fileText.find(start_string)
         endIndex = fileText.find(end_string)
-        param_text = fileText[startIndex - 4:endIndex - 4]
+        param_text = fileText[startIndex:endIndex]
+        # param_text = re.sub(r"<a.*?>", "<i>",param_text)                 # Two lines remove cross references in sys param text
+        # param_text = re.sub(r"</a>", "</i>",param_text)                  # Example is earth trace scope, but what about figures? see ETS
         print "\n", param_text.encode('utf8'), "\n\n"
         print "The start string is: ", start_string
         param_file_name = processHeading(start_string) + ".htm"
@@ -123,12 +124,7 @@ for file in systemParameterFilePaths:
         start_string = end_string
 
 
-        
-    # for d in duds:
-        # print d
 
-    # print "The last parameter in the file was: ", end_string  #Need to sort out last parameters in file problem
-    # and coding
-    # and rewriting directory for testing
+
 
 

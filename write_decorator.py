@@ -57,9 +57,7 @@ def message(file, text_to_display):
     return text_to_display
     
 if __name__ == "__main__":
-    # import io
     file = "diddy.htm"
     text_to_display = raw_input("Enter text for htm: ")
-    # text_to_display = "Hello there!"
     message(file, text_to_display)
     

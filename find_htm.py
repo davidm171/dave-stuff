@@ -112,7 +112,7 @@ def main():
         fileText = open_file(obj.htm_path)
         print "The italics file path is: ", obj.htm_path
         fileText = crossRefs(lang, top, obj, fileText, guideToDirMap)
-        # writefile(obj.htm_path, fileText)
+        writefile(obj.htm_path, fileText)
         print "File processed."
 
     
