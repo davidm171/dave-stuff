@@ -43,7 +43,7 @@ def h1_print(file_texts):
         yield path_transfer, Heading, find_italics, find_prospective_sys_params
             
 @timer
-def main():
+def process():
     top = r"C:\test_project"
     filepat = "*.htm"
 
@@ -122,4 +122,4 @@ def main():
     print "Subsystem directory is  ", HtmInfo.subsystemsDir
     
 if __name__ == "__main__":
-    main()
+    process()
