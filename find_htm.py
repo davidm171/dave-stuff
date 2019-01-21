@@ -44,12 +44,14 @@ def h1_print(file_texts):
             
 @timer
 def process():
-    top = r"C:\test_project"
+
+    import config
+    
     filepat = "*.htm"
 
     # Defines the generator ------------------------------------------------------------------------------
 
-    gen_find = (os.path.join(path,name) for path, dirlist, filelist in os.walk(top)
+    gen_find = (os.path.join(path,name) for path, dirlist, filelist in os.walk(config.build_path)
                                         for name in fnmatch.filter(filelist,filepat))
     file_text_strings = open_file_y(gen_find)
     h1s = h1_print(file_text_strings)
@@ -58,12 +60,12 @@ def process():
 
     for h in h1s:
         filename = os.path.split(path_transfer)[1]
-        if "poa_main.htm" == filename:
-            flare_main_path = os.path.split(path_transfer)[0]
+        if config.poa_filename == filename:
+            HtmInfo.flare_main_path = os.path.split(path_transfer)[0]
             print "Hurray, found poa_main.htm ", path_transfer
-            HtmInfo.poa_filename = path_transfer
-            HtmInfo.poa_main_content_dir = os.path.join(flare_main_path, "content")
-            HtmInfo.subsystemsDir = os.path.join(flare_main_path, "Subsystems")
+            # HtmInfo.poa_filename = path_transfer
+            config.flare_content_path = os.path.join(HtmInfo.flare_main_path, "content")
+            config.subsystemsDir = os.path.join(HtmInfo.flare_main_path, "Subsystems")
         htm_file_object = HtmInfo(filename, path_transfer, h[1], h[2], h[3])
         htm_file_object.add()
         italics_list = h[2]
@@ -92,13 +94,12 @@ def process():
     
     
     # Add system parameters sub folder-------------------------------------------------------------------
-    lang = "us"
-    build_path = top
+    lang = config.language
     
     allHtmPaths = [file for file in htms if "Subsystems" in str(file)]
     from createSysParamFiles import create_parameter_files
     
-    create_parameter_files(lang, build_path, allHtmPaths)
+    create_parameter_files(lang, config.build_path, allHtmPaths)
 
     # Start pricessing -----------------------------------------------------------------------------------
     from add_cross_refs import crossRefs
@@ -108,18 +109,18 @@ def process():
     guideToDirMap = {}
     guideToDirMap = import_map(lang)
 
-    for obj in HtmInfo.htm_italics_list:
-        fileText = open_file(obj.htm_path)
-        print "The italics file path is: ", obj.htm_path
-        fileText = crossRefs(lang, top, obj, fileText, guideToDirMap)
-        writefile(obj.htm_path, fileText)
-        print "File processed."
+    # for obj in HtmInfo.htm_italics_list:
+        # fileText = open_file(obj.htm_path)
+        # print "The italics file path is: ", obj.htm_path
+        # fileText = crossRefs(lang, config.build_path, obj, fileText, guideToDirMap)
+        # writefile(obj.htm_path, fileText)
+        # print "File processed."
 
     
 
-    print "POA file path is:       ", HtmInfo.poa_filename
-    print "Content directory is:   ", HtmInfo.poa_main_content_dir
-    print "Subsystem directory is  ", HtmInfo.subsystemsDir
+    print "POA file path is:       ", config.poa_filename
+    print "Content directory is:   ", config.flare_content_path
+    print "Subsystem directory is  ", config.subsystemsDir
     
 if __name__ == "__main__":
     process()
