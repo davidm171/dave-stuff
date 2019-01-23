@@ -2,9 +2,7 @@ class HtmInfo:
     htm_object_list = []
     htm_italics_list = []
     htm_params_list = []
-    # poa_main_content_dir = r"C:\test_project\output\AdvantageHTML5_us\content" # Note that this is hard coded for now!
-    # subsystemsDir = r"C:\test_project\output\AdvantageHTML5_us\Subsystems"
-    # flare_main_path = "null"
+    system_parameters_list = []
 
     def __init__(self, htm_name, htm_path, htm_h1, italics_list, 
                   prospective_sys_param_list):

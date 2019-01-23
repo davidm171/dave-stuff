@@ -76,6 +76,7 @@ def create_parameter_files(lang, build_path, allHtmPaths):
     if not os.path.exists(writeDestination):        # Should delete this first?
         os.makedirs(writeDestination)
 
+    from htm_object import HtmInfo
     from write_decorator import message
 
     for file in systemParameterFilePaths:
@@ -91,7 +92,8 @@ def create_parameter_files(lang, build_path, allHtmPaths):
         for h6 in h6_list:
         
             end_string = str(h6)
-            print "The proessed heading string is: ", processHeading(start_string)
+            HtmInfo.system_parameters_list.append(processHeading(start_string))
+            print "The proessed heading string is: ", processHeading(start_string)      #EXECUTING THIS TWICE!!!
             print start_string.encode('utf8'), " -----> ", end_string.encode('utf8')
             startIndex = fileText.find(start_string)
             endIndex = fileText.find(end_string)
@@ -106,7 +108,9 @@ def create_parameter_files(lang, build_path, allHtmPaths):
             print "@@@File path: ",  param_file_path
             message(param_file_path, param_text)
             start_string = end_string
-        
+
+    print "\n\nThe system parameter files have been created."
+    print "\nThe system parameters are\n\n", HtmInfo.system_parameters_list
 # Function to find all htms under path ------------------------------------------------------------------------------------------------------------------------------------
 def findHtm(path):
     htmfiles = [os.path.join(root, name)

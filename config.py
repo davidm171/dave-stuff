@@ -8,4 +8,4 @@ language = r"us"
 # poa_main_content_dir = r"unknown" # Note that this is hard coded for now!
 subsystemsDir = r"unknown"
 flare_main_path = r"unknown"
-flare_content_path = r"unknown"
+flare_content_path = r"unknown"     # this contains the language

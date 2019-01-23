@@ -59,6 +59,7 @@ def relPath(file):
 # Find the system parameters and replace the text with hyperlinks ---------------------------------------------------------------------------------------------------------
 def replaceLinks(path, sysParamList):
     # htmList = findHtm(path)
+    from htm_object import HtmInfo  # Shouldn't have to declare this twice
     excludeStrings = ['CDADA', 'DXF', 'CHA', 'CHE', 'XML', 'DOCTYPE', 'ICCP', 'FEP', 'RTU']
     SysParamFoundList = []
     for object in HtmInfo.htm_params_list:
@@ -105,28 +106,24 @@ def main():
 
     # Get a list of the system parameter files, could check body is not empty?-----------------------------------------------------------------------------------------------
 
-    op_dir = build_path + "\Output\AdvantageHTML5_" + lang + "\content\system_parameters"
+    import config
+    from htm_object import HtmInfo
     
-    if os.path.exists(op_dir):                        # This makes sure the system_parameter directory exists
+    op_dir = config.flare_content_path + "\system_parameters"
+    
+    if os.path.exists(op_dir):                        # This makes sure the system_parameter directory exists - is this required?
         print "op_dir is: ", op_dir
-        
-        filenames = next(os.walk(op_dir))[2]
-        sysParamList = []
-        for file in filenames:
-            sysParamList.append(file[:-4])
-            print file
-
-        path = build_path +"\Output" + "\AdvantageHTML5_" + lang + "\Subsystems"
+        sysParamList = HtmInfo.system_parameters_list
 
         # Find the system parameters and replace the text with hyperlinks --------------------------------------------------------------------------------------------------------
-        SysParamFoundList = replaceLinks(path, sysParamList)
+        SysParamFoundList = replaceLinks(op_dir, sysParamList)
 
 if __name__ == '__main__':
     import os, re
     lang = 'us'
     build_path = r"C:\test_project"
-    op_dir = build_path + "\Output\AdvantageHTML5_" + lang + "\content\system_parameters"
+    # op_dir = build_path + "\Output\AdvantageHTML5_" + lang + "\content\system_parameters"
     from find_htm import process
-    from htm_object import HtmInfo
+    # from htm_object import HtmInfo
     process()
     main()
