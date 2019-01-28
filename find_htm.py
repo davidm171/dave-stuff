@@ -103,7 +103,6 @@ def process():
 
     # Start pricessing -----------------------------------------------------------------------------------
     from add_cross_refs import crossRefs
-
     from excel_import import import_map
 
     guideToDirMap = {}
@@ -115,6 +114,20 @@ def process():
         # fileText = crossRefs(lang, config.build_path, obj, fileText, guideToDirMap)
         # writefile(obj.htm_path, fileText)
         # print "File processed."
+        
+    from param_insert import replaceLinks 
+        
+    for object in HtmInfo.htm_params_list:
+        prospective = object.prospective_sys_param_list
+        print "prospective", prospective
+        parameters_found_in_file = list(set(prospective) & set(HtmInfo.system_parameters_list))
+        print "Parameters found in file: ", parameters_found_in_file
+        if len(parameters_found_in_file) != 0:
+            fileText = open_file(object.htm_path)
+            fileText = replaceLinks(fileText, object, parameters_found_in_file)
+            writefile(object.htm_path, fileText)
+            print "File processed."
+        
 
     
 

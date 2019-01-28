@@ -34,6 +34,9 @@ def constructHref(entry, file):
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Function to find the depth of ellipisis in relative path -------------------------------------------------------------------------
 def relPath(file):
+    import os
+    import config
+    lang = config.language
     path = os.path.normpath(file)
     path_list = path.split(os.sep)
     print path_list
@@ -57,66 +60,47 @@ def relPath(file):
     return relPath
     # ---------------------------------------------------------------------------------------------------------------------------------
 # Find the system parameters and replace the text with hyperlinks ---------------------------------------------------------------------------------------------------------
-def replaceLinks(path, sysParamList):
-    # htmList = findHtm(path)
+def replaceLinks(fileText, object, parameters_found_in_file):
+    import re
     from htm_object import HtmInfo  # Shouldn't have to declare this twice
-    excludeStrings = ['CDADA', 'DXF', 'CHA', 'CHE', 'XML', 'DOCTYPE', 'ICCP', 'FEP', 'RTU']
-    SysParamFoundList = []
-    for object in HtmInfo.htm_params_list:
-        fileText = open_file(object.htm_path)                        # Does this need to be opened here
-        # Get prospective hits from object
-        prospective = object.prospective_sys_param_list
-        print "prospective", prospective
-        print "dibble"
-        print "Processing ", object.htm_path, " for system parameters..."
-        
-        parameters_found_in_file = []
-        for pros in prospective:
-            if pros in sysParamList:
-                parameters_found_in_file.append(pros)
-        print "PArameters found in file: ", parameters_found_in_file
-        if len(parameters_found_in_file) != 0:
-        
-            for hit in parameters_found_in_file:                # this will only find it once in each para, but that's fine?
-                # paraHits = re.findall(r"((?:<p|<li).+?[^>#=\"\/]\b[^_]{0}[^_=]\b)".format(hit),fileText)              #Could check here for \ or .htm to stop links being processed.
-                paraHits = re.findall(r"((?:<p|<li).+?[^#='\"\/]\b{0}\b[^='])".format(hit),fileText)  
-                print "paraHits", paraHits
-                if len(paraHits) != 0:
-                    print "---The sentence is             :   ", paraHits[0]
-                    print "---The prospective parameter is:   ", hit
-                    
-                    if hit in sysParamList:
-                        print "---                            :   ", hit, " is a system parameter"
-                        paraHit = paraHits[0]
-                        print ">>", paraHit
-                        href = constructHref(hit, object.htm_path)
-                        newPara = paraHit.replace(hit, href)
-                        print "---The new sentence is         :   ", newPara, "\n\n"
-                        newFileText = fileText.replace(paraHit, newPara)
-                        fileText = newFileText
-                        # writefile(file, fileText)
-                                            
-                
-            writefile(object.htm_path, fileText)
-        print "dibble 2"
+    
+    for hit in parameters_found_in_file:                # this will only find it once in each para, but that's fine?
+        # paraHits = re.findall(r"((?:<p|<li).+?[^>#=\"\/]\b[^_]{0}[^_=]\b)".format(hit),fileText)              #Could check here for \ or .htm to stop links being processed.
+        paraHits = re.findall(r"((?:<p|<li).+?[^#='\"\/]\b{0}\b[^='])".format(hit),fileText)  
+        print "paraHits", paraHits
+        if len(paraHits) != 0:
+            print "---The sentence is             :   ", paraHits[0]
+            print "---The prospective parameter is:   ", hit
+            
+            if hit in parameters_found_in_file:
+                print "---                            :   ", hit, " is a system parameter"
+                paraHit = paraHits[0]
+                print ">>", paraHit
+                href = constructHref(hit, object.htm_path)
+                newPara = paraHit.replace(hit, href)
+                print "---The new sentence is         :   ", newPara, "\n\n"
+                newFileText = fileText.replace(paraHit, newPara)
+                fileText = newFileText
+
+    return fileText
                             
     # Main --------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-def main():
+# def main():
 
     # Get a list of the system parameter files, could check body is not empty?-----------------------------------------------------------------------------------------------
 
-    import config
-    from htm_object import HtmInfo
+    # import config
+    # from htm_object import HtmInfo
     
-    op_dir = config.flare_content_path + "\system_parameters"
+    # op_dir = config.flare_content_path + "\system_parameters"
     
-    if os.path.exists(op_dir):                        # This makes sure the system_parameter directory exists - is this required?
-        print "op_dir is: ", op_dir
-        sysParamList = HtmInfo.system_parameters_list
+    # if os.path.exists(op_dir):                        # This makes sure the system_parameter directory exists - is this required?
+        # print "op_dir is: ", op_dir
+        # sysParamList = HtmInfo.system_parameters_list
 
         # Find the system parameters and replace the text with hyperlinks --------------------------------------------------------------------------------------------------------
-        SysParamFoundList = replaceLinks(op_dir, sysParamList)
+        # SysParamFoundList = replaceLinks(op_dir, sysParamList)
 
 if __name__ == '__main__':
     import os, re
@@ -124,6 +108,5 @@ if __name__ == '__main__':
     build_path = r"C:\test_project"
     # op_dir = build_path + "\Output\AdvantageHTML5_" + lang + "\content\system_parameters"
     from find_htm import process
-    # from htm_object import HtmInfo
     process()
-    main()
+    # main()
