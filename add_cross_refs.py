@@ -9,7 +9,7 @@
 # It substitutes the same text back in, for example a reference to Work Package Manager instead of Order Manager
 
 
-def crossRefs(lang, build_path, obj, fileText, guideToDirMap):
+def crossRefs(build_path, obj, fileText, guideToDirMap):
 
 
     # guideToDirMap = {"PowerOn Configuration Reference Guide" : "Subsystems\\core_config\\content\\00-poweron_configuration_reference", "Generic Functionality Guide" : \

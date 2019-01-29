@@ -107,26 +107,46 @@ def process():
 
     guideToDirMap = {}
     guideToDirMap = import_map(lang)
-
-    # for obj in HtmInfo.htm_italics_list:
+    from param_insert import replaceLinks
+    
+    # obj_union = set(HtmInfo.htm_italics_list) | set(HtmInfo.htm_params_list)
+    
+    # for obj in obj_union:
         # fileText = open_file(obj.htm_path)
-        # print "The italics file path is: ", obj.htm_path
-        # fileText = crossRefs(lang, config.build_path, obj, fileText, guideToDirMap)
-        # writefile(obj.htm_path, fileText)
+        # print "The file to be processed has the path: ", obj.htm_path
+        # fileText = open_file(obj.htm_path)
+        # if obj.htm_italics_list:
+            # fileText = crossRefs(lang, config.build_path, obj, fileText, guideToDirMap)
+        
+        # if obj.htm_params_list:
+            # prospective = obj.prospective_sys_param_list
+            # parameters_found_in_file = list(set(prospective) & set(HtmInfo.system_parameters_list))
+            # if parameters_found_in_file:
+                # fileText = replaceLinks(fileText, obj, parameters_found_in_file)
+                
         # print "File processed."
+        # writefile(obj.htm_path, fileText)
+    
+    for obj in HtmInfo.htm_italics_list:
+        print "The file to be processed has the path: ", obj.htm_path
+        fileText = open_file(obj.htm_path)
+        print "The italics file path is: ", obj.htm_path
+        fileText = crossRefs(config.build_path, obj, fileText, guideToDirMap)
+        writefile(obj.htm_path, fileText)
+        print "File processed."
         
-    from param_insert import replaceLinks 
+    # from param_insert import replaceLinks 
         
-    for object in HtmInfo.htm_params_list:
-        prospective = object.prospective_sys_param_list
-        print "prospective", prospective
-        parameters_found_in_file = list(set(prospective) & set(HtmInfo.system_parameters_list))
-        print "Parameters found in file: ", parameters_found_in_file
-        if len(parameters_found_in_file) != 0:
-            fileText = open_file(object.htm_path)
-            fileText = replaceLinks(fileText, object, parameters_found_in_file)
-            writefile(object.htm_path, fileText)
-            print "File processed."
+    # for object in HtmInfo.htm_params_list:
+        # prospective = object.prospective_sys_param_list
+        # print "prospective", prospective
+        # parameters_found_in_file = list(set(prospective) & set(HtmInfo.system_parameters_list))
+        # print "Parameters found in file: ", parameters_found_in_file
+        # if len(parameters_found_in_file) != 0:
+            # fileText = open_file(object.htm_path)
+            # fileText = replaceLinks(fileText, object, parameters_found_in_file)
+            # writefile(object.htm_path, fileText)
+            # print "File processed."
         
 
     
