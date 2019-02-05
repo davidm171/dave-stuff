@@ -109,31 +109,31 @@ def process():
     guideToDirMap = import_map(lang)
     from param_insert import replaceLinks
     
-    # obj_union = set(HtmInfo.htm_italics_list) | set(HtmInfo.htm_params_list)
+    obj_union = set(HtmInfo.htm_italics_list) | set(HtmInfo.htm_params_list)
     
-    # for obj in obj_union:
-        # fileText = open_file(obj.htm_path)
-        # print "The file to be processed has the path: ", obj.htm_path
-        # fileText = open_file(obj.htm_path)
-        # if obj.htm_italics_list:
-            # fileText = crossRefs(lang, config.build_path, obj, fileText, guideToDirMap)
-        
-        # if obj.htm_params_list:
-            # prospective = obj.prospective_sys_param_list
-            # parameters_found_in_file = list(set(prospective) & set(HtmInfo.system_parameters_list))
-            # if parameters_found_in_file:
-                # fileText = replaceLinks(fileText, obj, parameters_found_in_file)
-                
-        # print "File processed."
-        # writefile(obj.htm_path, fileText)
-    
-    for obj in HtmInfo.htm_italics_list:
+    for obj in obj_union:
+        fileText = open_file(obj.htm_path)
         print "The file to be processed has the path: ", obj.htm_path
         fileText = open_file(obj.htm_path)
-        print "The italics file path is: ", obj.htm_path
-        fileText = crossRefs(config.build_path, obj, fileText, guideToDirMap)
-        writefile(obj.htm_path, fileText)
+        if obj.htm_italics_list:
+            fileText = crossRefs(obj, fileText, guideToDirMap)
+        
+        if obj.htm_params_list:
+            prospective = obj.prospective_sys_param_list
+            parameters_found_in_file = list(set(prospective) & set(HtmInfo.system_parameters_list))
+            if parameters_found_in_file:
+                fileText = replaceLinks(fileText, obj, parameters_found_in_file)
+                
         print "File processed."
+        writefile(obj.htm_path, fileText)
+    
+    # for obj in HtmInfo.htm_italics_list:
+        # print "The file to be processed has the path: ", obj.htm_path
+        # fileText = open_file(obj.htm_path)
+        # print "The italics file path is: ", obj.htm_path
+        # fileText = crossRefs(config.build_path, obj, fileText, guideToDirMap)
+        # writefile(obj.htm_path, fileText)
+        # print "File processed."
         
     # from param_insert import replaceLinks 
         

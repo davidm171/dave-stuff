@@ -9,15 +9,8 @@
 # It substitutes the same text back in, for example a reference to Work Package Manager instead of Order Manager
 
 
-def crossRefs(build_path, obj, fileText, guideToDirMap):
+def crossRefs(obj, fileText, guideToDirMap):
 
-
-    # guideToDirMap = {"PowerOn Configuration Reference Guide" : "Subsystems\\core_config\\content\\00-poweron_configuration_reference", "Generic Functionality Guide" : \
-    # "Subsystems\\core\\content\\00-generic_functionality", "Alarm Configuration Guide" : "Subsystems\\core_config\\content\\02-alarm_configuration", "Generic Functionality User Guide" : \
-    # "02-user\\00-core\\Content\\00-generic_functionality", "Operators and Privileges Configuration Guide" : "OperatorsandPrivilegesConfigurationHelp",\
-    # "Work Package Manager Configuration Guide" : "Subsystems\\nms_config\\content\\01-wpm_configuration", "PowerOn Configuration Guide" : \
-    # "Subsystems\\core_config\\content\\01-poweron_configuration", "Order Manager Configuration Guide" : "WorkPackageManagerConfigurationHelp", \
-    # "Work Package Manager User Guide" : "Subsystems\\nms\content\\01-order_manager", "Order Manager User Guide" : "Subsystems\\nms\content\\01-order_managerr"}
 
     import os, re, sys, textwrap
     
@@ -26,7 +19,9 @@ def crossRefs(build_path, obj, fileText, guideToDirMap):
     # Function to find the depth of ellipisis in relative path -------------------------------------------------------------------------
     def relPath(file):
         path = os.path.normpath(file)
+        print "\n\nPath is: ", path
         path_list = path.split(os.sep)
+        print path_list
         absoluteFileDepth = len(path_list)
         depthCount = absoluteFileDepth
 
@@ -71,7 +66,7 @@ def crossRefs(build_path, obj, fileText, guideToDirMap):
             elif len(ref) == 2:
                 section = ref[1]
                 linkInfo = constructCrossRef(guideDirectory, section,  linkInfo)
-
+        print "\n\nlinkInfo is: ", linkInfo
         return linkInfo
 
     # ---------------------------------------------------------------------------------------------------------------------------------
@@ -84,8 +79,11 @@ def crossRefs(build_path, obj, fileText, guideToDirMap):
                     str(section).lower() in str(htm_object.htm_path).lower()):
 
                 htmRef = re.findall(r'Subsystems\\(.+?\.htm)', htm_object.htm_path)
+                print "Full path to target is: ", htm_object.htm_path
+                print "htmRef to target is: ", htmRef
+                print "Source path is", obj.htm_path
                 relativeRef = str(htmRef[0])
-                href = relPath(htm_object.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
+                href = relPath(obj.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
                 linkInfo[0] = href
                 linkInfo.append(section)
 
@@ -99,9 +97,12 @@ def crossRefs(build_path, obj, fileText, guideToDirMap):
             if (str(guideDirectory).lower() in str(htm_object.htm_path).lower()) and (section == htm_object.htm_h1):
  
                 htmRef = re.findall(r'Subsystems\\(.+?\.htm)', htm_object.htm_path)
+                print "Full path to target is: ", htm_object.htm_path
+                print "htmRef2 to target is: ", htmRef
+                print "Source path is", obj.htm_path
                 relativeRef = str(htmRef[0])
 
-                href = relPath(htm_object.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
+                href = relPath(obj.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
 
                 linkInfo[0] = href
                 linkInfo.append(section)
@@ -116,6 +117,8 @@ def crossRefs(build_path, obj, fileText, guideToDirMap):
     htm_object_list = obj.htm_object_list
     
     findItalics = obj.italics_list
+    
+    print "\n\nThe object's italics list is: ", obj.italics_list
     if "system_parameters" not in str(obj.htm_path):  # Don't process the system parameters directory
 
         for hit in findItalics:
@@ -123,9 +126,11 @@ def crossRefs(build_path, obj, fileText, guideToDirMap):
             refInfo = guideToDir(ref)
 
             if refInfo[0] != "Link not found!":
+                print "refInfo is: ", refInfo
                 hit = hit[3:-4]  # Remove italics here from text
                 aTag = "<a href=" + "\"" + refInfo[0] + "\"" + " class=\"MCXref xref\"" + ">" + hit + "</a>"
                 aTag = aTag.replace("\\", "/")
+                print "The cross ref replacement is: ", aTag
                 hit = "<i>" + hit + "</i>"  # Substitute italics out, there must be an easier way?
                 fileText = fileText.replace(hit, aTag)
                 
