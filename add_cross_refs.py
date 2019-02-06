@@ -115,7 +115,6 @@ def crossRefs(obj, fileText, guideToDirMap):
     # path = "C:\\builds\\us"														# CHANGE THIS TO POINT TO ANY DIRECTORY AS LONG AS TRANSLATION IN SPREADSHEET
     
     htm_object_list = obj.htm_object_list
-    
     findItalics = obj.italics_list
     
     print "\n\nThe object's italics list is: ", obj.italics_list

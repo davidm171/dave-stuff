@@ -36,6 +36,13 @@ def create_parameter_files(lang, build_path, allHtmPaths):
 
         return systemParameterFilePaths
         
+    def find_png(path):                                 #Find a better way to do this
+        pngfiles = [os.path.join(root, name)
+        for root, dirs, files in os.walk(path)
+            for name in files
+                if name.endswith(".png")]
+        return pngfiles
+        
     # Main --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     import codecs, os, string, re, shutil, sys
@@ -78,7 +85,11 @@ def create_parameter_files(lang, build_path, allHtmPaths):
 
     from htm_object import HtmInfo
     from write_decorator import message
-
+    from image_copy import update_image_link
+    
+    image_list = []
+    image_list = find_png(r"C:\test_project\output\AdvantageHTML5_us")
+    
     for file in systemParameterFilePaths:
         fileText = open_file(file).decode('utf8')
         
@@ -94,18 +105,19 @@ def create_parameter_files(lang, build_path, allHtmPaths):
             end_string = str(h6)
             HtmInfo.system_parameters_list.append(processHeading(start_string))
             print "The proessed heading string is: ", processHeading(start_string)      #EXECUTING THIS TWICE!!!
-            print start_string.encode('utf8'), " -----> ", end_string.encode('utf8')
+            # print start_string.encode('utf8'), " -----> ", end_string.encode('utf8')
             startIndex = fileText.find(start_string)
             endIndex = fileText.find(end_string)
             param_text = fileText[startIndex:endIndex]
             # param_text = re.sub(r"<a.*?>", "<i>",param_text)                 # Two lines remove cross references in sys param text
             # param_text = re.sub(r"</a>", "</i>",param_text)                  # Example is earth trace scope, but what about figures? see ETS
-            print "\n", param_text.encode('utf8'), "\n\n"
-            print "The start string is: ", start_string
+            # print "\n", param_text.encode('utf8'), "\n\n"
+            # print "The start string is: ", start_string
             param_file_name = processHeading(start_string) + ".htm"
-            print "The filenmae is: ", param_file_name
+            # print "The filenmae is: ", param_file_name
             param_file_path = os.path.join(writeDestination, param_file_name)
-            print "@@@File path: ",  param_file_path
+            print "Writing system parameter file: ",  param_file_path
+            param_text = update_image_link(param_text, image_list)                          #Update any image lnks
             message(param_file_path, param_text)
             start_string = end_string
 

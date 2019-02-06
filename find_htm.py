@@ -25,8 +25,7 @@ def open_file_y(file_paths):
         yield open_file(file)
             
 def h1_print(file_texts):
-    excludeStrings = {'ACTION', 'ALIAS', 'APRS', 'PATH', 'CDATA', 'DATA', 'DXF', 'CHA', 'CHE', 'XML', 'DOCTYPE', 'ICCP', 'FEP', 'RTU', 'SCADA', 'FUNCTION', 'CONTROL'
-                      , 'BAD', 'QUALITY', 'ENMAC', 'LIMITBAND', 'NMS', 'OMS', 'ATTRIBUTE', 'PSTN', 'STATUS', 'REPLY', 'VALUE', 'COMPONENT'}
+
     for text in file_texts:
         temp_text = text.replace('\n', '').replace('\r', '')  # Remove carriage returns and line feeds
         rawHeading = re.findall(r"<h1.+?</h1>", temp_text)  # Remove all other tags
@@ -38,7 +37,7 @@ def h1_print(file_texts):
 
         find_italics = re.findall(r"<i>.+?</i>", text)
         find_prospective_sys_params_temp = re.findall(r'\b[A-Z,_]{3,60}\b', text)
-        find_prospective_sys_params = list(set(find_prospective_sys_params_temp) - excludeStrings)
+        find_prospective_sys_params = list(set(find_prospective_sys_params_temp))
         
         yield path_transfer, Heading, find_italics, find_prospective_sys_params
             
@@ -46,7 +45,6 @@ def h1_print(file_texts):
 def process():
 
     import config
-    
     filepat = "*.htm"
 
     # Defines the generator ------------------------------------------------------------------------------
@@ -126,29 +124,6 @@ def process():
                 
         print "File processed."
         writefile(obj.htm_path, fileText)
-    
-    # for obj in HtmInfo.htm_italics_list:
-        # print "The file to be processed has the path: ", obj.htm_path
-        # fileText = open_file(obj.htm_path)
-        # print "The italics file path is: ", obj.htm_path
-        # fileText = crossRefs(config.build_path, obj, fileText, guideToDirMap)
-        # writefile(obj.htm_path, fileText)
-        # print "File processed."
-        
-    # from param_insert import replaceLinks 
-        
-    # for object in HtmInfo.htm_params_list:
-        # prospective = object.prospective_sys_param_list
-        # print "prospective", prospective
-        # parameters_found_in_file = list(set(prospective) & set(HtmInfo.system_parameters_list))
-        # print "Parameters found in file: ", parameters_found_in_file
-        # if len(parameters_found_in_file) != 0:
-            # fileText = open_file(object.htm_path)
-            # fileText = replaceLinks(fileText, object, parameters_found_in_file)
-            # writefile(object.htm_path, fileText)
-            # print "File processed."
-        
-
     
 
     print "POA file path is:       ", config.poa_filename
