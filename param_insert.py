@@ -39,7 +39,7 @@ def relPath(file):
     relPath = ""
     for i in range(0, depth):
         relPath = relPath + "../"
-        print "relPath: ", relPath
+        # print "relPath: ", relPath
     
     return relPath
     # ---------------------------------------------------------------------------------------------------------------------------------
