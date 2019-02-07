@@ -1,16 +1,5 @@
 # coding="utf-8"
 
-
-# def add_parameter_references(lang, build_path, htm_params_list):
-    
-    # import string, os, re
-    # import codecs, sys
-    # codecs.register(lambda name: codecs.lookup('utf-8') if name == 'cp65001' else None)
-    # sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)                                        # Gets rid of coding errors when print to screen
-
-    # reload(sys)  
-    # sys.setdefaultencoding('utf8')
-
 # open the file-----------------------------------------------------------------------------------------------------------------------------------------------------------
 def open_file(file_name):
     f1 = open(file_name, "r")
@@ -27,7 +16,6 @@ def writefile(file,fileText):
 # Create a popup href for the system parameter ----------------------------------------------------------------------------------------------------------------------------                
 def constructHref(entry, file):
     ellipsis = relPath(file)
-    print "Ellipsis: ", ellipsis
     href = "<a href=\"" +  ellipsis + "content/system_parameters/" + entry + ".htm\" " + "class=\"MCTopicPopup MCTopicPopupHotSpot a aPopup\" data-mc-width=\"auto\" data-mc-height=\"auto\">" + entry + "</a>"
     print "The href is: ", href
     return href
@@ -46,17 +34,13 @@ def relPath(file):
     file_path_html = "AdvantageHTML5_" + lang  #.upper()
     while path_list[depthCount-1] != file_path_html:            # This should be constructed for all languages
         depthCount -= 1
-        print "depthCount is: ", depthCount
     
-    depth = absoluteFileDepth - depthCount - 1        
-    print "Depth is: ", absoluteFileDepth - depthCount - 1
+    depth = absoluteFileDepth - depthCount - 1
     relPath = ""
     for i in range(0, depth):
         relPath = relPath + "../"
         print "relPath: ", relPath
     
-    # ellipsis = os.path.normpath(relPath)                            This changes it to a dos path?
-    print "The ELLIPSIS is: ", relPath
     return relPath
     # ---------------------------------------------------------------------------------------------------------------------------------
 # Find the system parameters and replace the text with hyperlinks ---------------------------------------------------------------------------------------------------------
@@ -69,16 +53,12 @@ def replaceLinks(fileText, object, parameters_found_in_file):
         paraHits = re.findall(r"((?:<p|<li).+?[^#='\"\/]\b{0}\b[^='])".format(hit),fileText)  
         print "paraHits", paraHits
         if len(paraHits) != 0:
-            print "---The sentence is             :   ", paraHits[0]
             print "---The prospective parameter is:   ", hit
             
             if hit in parameters_found_in_file:
-                print "---                            :   ", hit, " is a system parameter"
                 paraHit = paraHits[0]
-                print ">>", paraHit
                 href = constructHref(hit, object.htm_path)
                 newPara = paraHit.replace(hit, href)
-                print "---The new sentence is         :   ", newPara, "\n\n"
                 newFileText = fileText.replace(paraHit, newPara)
                 fileText = newFileText
 

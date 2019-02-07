@@ -79,9 +79,6 @@ def crossRefs(obj, fileText, guideToDirMap):
                     str(section).lower() in str(htm_object.htm_path).lower()):
 
                 htmRef = re.findall(r'Subsystems\\(.+?\.htm)', htm_object.htm_path)
-                print "Full path to target is: ", htm_object.htm_path
-                print "htmRef to target is: ", htmRef
-                print "Source path is", obj.htm_path
                 relativeRef = str(htmRef[0])
                 href = relPath(obj.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
                 linkInfo[0] = href
@@ -97,9 +94,6 @@ def crossRefs(obj, fileText, guideToDirMap):
             if (str(guideDirectory).lower() in str(htm_object.htm_path).lower()) and (section == htm_object.htm_h1):
  
                 htmRef = re.findall(r'Subsystems\\(.+?\.htm)', htm_object.htm_path)
-                print "Full path to target is: ", htm_object.htm_path
-                print "htmRef2 to target is: ", htmRef
-                print "Source path is", obj.htm_path
                 relativeRef = str(htmRef[0])
 
                 href = relPath(obj.htm_path) + "\\" + relativeRef  # Why need the to add \\?????
@@ -115,6 +109,7 @@ def crossRefs(obj, fileText, guideToDirMap):
     # path = "C:\\builds\\us"														# CHANGE THIS TO POINT TO ANY DIRECTORY AS LONG AS TRANSLATION IN SPREADSHEET
     
     htm_object_list = obj.htm_object_list
+    
     findItalics = obj.italics_list
     
     print "\n\nThe object's italics list is: ", obj.italics_list

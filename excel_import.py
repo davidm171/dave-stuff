@@ -7,7 +7,8 @@ def import_map(lang):
     wb = openpyxl.load_workbook('C:\\spreadsheet\\guide to flare project map.xlsx')
     
     sheetName = "Dir to Guide Mapping - " +  lang.upper()
-    print "The sheet name is ", sheetName
+    print "\n\nThe sheet name is ", sheetName
+    print "\nThe guide to directory mappings are:\n"
     try:
         guideMapSheet = wb[sheetName]            ## Should put check in here so it knows what sheets are there, and ignores if they're not
     except KeyError:

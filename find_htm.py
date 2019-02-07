@@ -25,7 +25,8 @@ def open_file_y(file_paths):
         yield open_file(file)
             
 def h1_print(file_texts):
-
+    excludeStrings = {'ACTION', 'ALIAS', 'APRS', 'PATH', 'CDATA', 'DATA', 'DXF', 'CHA', 'CHE', 'XML', 'DOCTYPE', 'ICCP', 'FEP', 'RTU', 'SCADA', 'FUNCTION', 'CONTROL'
+                      , 'BAD', 'QUALITY', 'ENMAC', 'LIMITBAND', 'NMS', 'OMS', 'ATTRIBUTE', 'PSTN', 'STATUS', 'REPLY', 'VALUE', 'COMPONENT'}
     for text in file_texts:
         temp_text = text.replace('\n', '').replace('\r', '')  # Remove carriage returns and line feeds
         rawHeading = re.findall(r"<h1.+?</h1>", temp_text)  # Remove all other tags
@@ -37,7 +38,7 @@ def h1_print(file_texts):
 
         find_italics = re.findall(r"<i>.+?</i>", text)
         find_prospective_sys_params_temp = re.findall(r'\b[A-Z,_]{3,60}\b', text)
-        find_prospective_sys_params = list(set(find_prospective_sys_params_temp))
+        find_prospective_sys_params = list(set(find_prospective_sys_params_temp) - excludeStrings)
         
         yield path_transfer, Heading, find_italics, find_prospective_sys_params
             
@@ -45,6 +46,7 @@ def h1_print(file_texts):
 def process():
 
     import config
+    
     filepat = "*.htm"
 
     # Defines the generator ------------------------------------------------------------------------------
@@ -124,7 +126,6 @@ def process():
                 
         print "File processed."
         writefile(obj.htm_path, fileText)
-    
 
     print "POA file path is:       ", config.poa_filename
     print "Content directory is:   ", config.flare_content_path
